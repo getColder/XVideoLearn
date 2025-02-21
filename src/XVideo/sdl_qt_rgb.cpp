@@ -22,6 +22,7 @@ SDL_QT_RGB::SDL_QT_RGB(QWidget *parent)
     ui.label->resize(sdl_width, sdl_height);
     view = XVideoView::Create(XVideoView::SDL);
     view->Init(sdl_width, sdl_height, XVideoView::YUV420P, (void*)ui.label->winId());
+    //view->Init(sdl_width, sdl_height, XVideoView::YUV420P, NULL);   //独立窗口
     yuv_file.open("videos/400_300_25.yuv", std::ios::binary);
     if (!yuv_file)
     {
@@ -44,11 +45,16 @@ void SDL_QT_RGB::timerEvent(QTimerEvent* ev)
 {
     yuv_file.read((char*)yuv_mem, sdl_width * sdl_height * 1.5);
     view->Draw(yuv_mem);
+    if (view->IsExit()) {
+        view->Close();
+        exit(0);
+    }
 }
 
 void SDL_QT_RGB::resizeEvent(QResizeEvent* ev)
 {
     ui.label->resize(size());
     ui.label->move(0, 0);
-    view->Scale(ui.label->width(), ui.label->height());
+    //手动缩放
+    //view->Scale(ui.label->width(), ui.label->height());
 }

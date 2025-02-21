@@ -27,28 +27,25 @@ bool XSDL::Init(int w, int h, Format fmt/* = RGBA */, void* wind_id/* = nullptr*
 	width_ = w;
 	height_ = h;
 	fmt_ = fmt;
-
+	//防止重复创建
+	if (render_)
+		SDL_DestroyTexture(texture_);
+	if (render_)
+		SDL_DestroyRenderer(render_);
 	//1、创建窗口
 	if (!win_)
 	{
 		if (!wind_id)
-		{
 			win_ = SDL_CreateWindow("", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-		}
-		else {
+		else 
 			win_ = SDL_CreateWindowFrom(wind_id);
-		}
 		if (!win_) 
-		{
 			std::cerr << SDL_GetError() << std::endl;
-		}
 	}
 	//2、创建渲染器
 	render_ = SDL_CreateRenderer(win_, -1, SDL_RENDERER_ACCELERATED);
 	if (!render_)
-	{
 		std::cerr << SDL_GetError() << std::endl;
-	}
 	//3、创建材质
 	unsigned int sdl_fmt = SDL_PIXELFORMAT_ARGB8888;
 	switch (fmt_)
@@ -67,6 +64,36 @@ bool XSDL::Init(int w, int h, Format fmt/* = RGBA */, void* wind_id/* = nullptr*
 	}
 	texture_ = SDL_CreateTexture(render_, sdl_fmt, SDL_TEXTUREACCESS_STREAMING, w, h);
 	return true;
+}
+
+void XSDL::Close()
+{
+	//保证线程安全
+	std::unique_lock<std::mutex> sdl_lock(mtx_);
+	if (texture_)
+	{
+		SDL_DestroyTexture(texture_);
+		texture_ = nullptr;
+	}
+	if (render_)
+	{
+		SDL_DestroyRenderer(render_);
+		render_ = nullptr;
+	}
+	if (win_)
+	{
+		SDL_DestroyWindow(win_);
+		win_ = nullptr;
+	}
+}
+
+bool XSDL::IsExit()
+{
+	SDL_Event ev;
+	SDL_WaitEventTimeout(&ev, 1);
+	if (ev.type == SDL_QUIT)
+		return true;
+	return false;
 }
 
 bool XSDL::Draw(unsigned char* data, int linesize/* = 0 */)
@@ -103,10 +130,11 @@ bool XSDL::Draw(unsigned char* data, int linesize/* = 0 */)
 	}
 	SDL_RenderClear(render_);
 	//材质复制
-	if (scale_w_ <= 0) scale_w_ = width_;
-	if (scale_h_ <= 0) scale_h_ = height_;
-	SDL_Rect rect = {0, 0, scale_w_, scale_h_ };
-	ret = SDL_RenderCopy(render_, texture_, NULL, &rect);
+	SDL_Rect* pRect = nullptr;
+	SDL_Rect rect_user = { 0, 0, scale_w_, scale_h_ };
+	if (scale_w_ > 0 && scale_h_ > 0)
+		pRect = &rect_user;
+	ret = SDL_RenderCopy(render_, texture_, NULL, pRect);
 	if (ret)
 	{
 		std::cout << SDL_GetError() << std::endl;
