@@ -1,0 +1,10 @@
+.*
+!.gitignore
+tools/ffmpeg-4.3/*
+src/Test*
+/bin/*/*.pdb
+/bin/*/*.exe
+/bin/*/*.ilk
+/bin/*/imgs/
+/bin/*/videos/
+/src/**/Debug/

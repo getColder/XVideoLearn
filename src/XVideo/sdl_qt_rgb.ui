@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SDL_QT_RGBClass</class>
+ <widget class="QWidget" name="SDL_QT_RGBClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1920</width>
+    <height>1080</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SDL_QT_RGB</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>300</y>
+     <width>400</width>
+     <height>300</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Video</string>
+   </property>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="sdl_qt_rgb.qrc"/>
+ </resources>
+ <connections/>
+</ui>
