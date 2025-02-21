@@ -14,6 +14,8 @@ static bool InitVideo()
 		std::cerr << SDL_GetError() << std::endl;
 		return false;
 	}
+	//Ñ¡ÔñËõ·ÅËã·¨£¬¿¹¾â³Ý
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 	return true;
 }
 
