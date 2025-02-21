@@ -102,9 +102,9 @@
     <ClCompile Include="xsdl.cpp" />
     <ClCompile Include="XVideoView.cpp" />
     <QtRcc Include="sdl_qt_rgb.qrc" />
-    <QtUic Include="sdl_qt_rgb.ui" />
-    <QtMoc Include="sdl_qt_rgb.h" />
-    <ClCompile Include="sdl_qt_rgb.cpp" />
+    <QtUic Include="sdl_qt_yuv.ui" />
+    <QtMoc Include="sdl_qt_yuv.h" />
+    <ClCompile Include="sdl_qt_yuv.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

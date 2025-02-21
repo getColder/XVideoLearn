@@ -129,12 +129,27 @@ bool XSDL::Draw(unsigned char* data, int linesize/* = 0 */)
 		return false;
 	}
 	SDL_RenderClear(render_);
-	//²ÄÖÊ¸´ÖÆ
+	switch (rMode_)
+	{
+	case RenderMode::Normal:
+		return RenderNormal(scale_w_, scale_h_);
+	case RenderMode::Copy:
+		return RenderCopy(scale_w_, scale_h_);
+	case RenderMode::Mirror:
+		return RenderMirror(scale_w_, scale_h_);
+	default:
+		break;
+	}
+	return RenderNormal(scale_w_, scale_h_);
+}
+
+bool XSDL::RenderNormal(int w, int h)
+{
 	SDL_Rect* pRect = nullptr;
-	SDL_Rect rect_user = { 0, 0, scale_w_, scale_h_ };
-	if (scale_w_ > 0 && scale_h_ > 0)
+	SDL_Rect rect_user = { 0, 0, w, h};
+	if (w > 0 && h > 0)
 		pRect = &rect_user;
-	ret = SDL_RenderCopy(render_, texture_, NULL, pRect);
+	int ret = SDL_RenderCopy(render_, texture_, NULL, pRect);
 	if (ret)
 	{
 		std::cout << SDL_GetError() << std::endl;
@@ -145,3 +160,53 @@ bool XSDL::Draw(unsigned char* data, int linesize/* = 0 */)
 	return true;
 }
 
+bool XSDL::RenderCopy(int w, int h)
+{
+	SDL_Rect* pRect = nullptr;
+	SDL_Rect rect_user = { 0, scale_h_ / 4, w / 2, h /2};
+	if (w > 0 && h > 0)
+		pRect = &rect_user;
+	int ret = SDL_RenderCopy(render_, texture_, NULL, pRect);
+	if (ret)
+	{
+		std::cout << SDL_GetError() << std::endl;
+		return false;
+	}
+	//¸´ÖÆ
+	SDL_Rect rect_copy = { scale_w_ / 2,  scale_h_ / 4, scale_w_ / 2 , scale_h_ / 2 };
+	ret = SDL_RenderCopy(render_, texture_, NULL, &rect_copy);
+	if (ret)
+	{
+		std::cout << SDL_GetError() << std::endl;
+		return false;
+	}
+	//äÖÈ¾
+	SDL_RenderPresent(render_);
+	return true;
+}
+
+bool XSDL::RenderMirror(int w, int h)
+{
+	SDL_Rect* pRect = nullptr;
+	SDL_Rect rect_user = { 0, scale_h_ / 4, w / 2, h / 2 };
+	if (w > 0 && h > 0)
+		pRect = &rect_user;
+	int ret = SDL_RenderCopy(render_, texture_, NULL, pRect);
+	if (ret)
+	{
+		std::cout << SDL_GetError() << std::endl;
+		return false;
+	}
+	//¸´ÖÆ
+	SDL_Rect rect_copy = { scale_w_ / 2, scale_h_ / 4, scale_w_ / 2 , scale_h_ / 2 };
+	SDL_Point sdl_point ={ 0,0 };
+	ret = SDL_RenderCopyEx(render_, texture_, NULL, &rect_copy, 0, &sdl_point, SDL_FLIP_HORIZONTAL);
+	if (ret)
+	{
+		std::cout << SDL_GetError() << std::endl;
+		return false;
+	}
+	//äÖÈ¾
+	SDL_RenderPresent(render_);
+	return true;
+}

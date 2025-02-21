@@ -26,13 +26,13 @@
     <QtRcc Include="sdl_qt_rgb.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <QtUic Include="sdl_qt_rgb.ui">
+    <QtUic Include="sdl_qt_yuv.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtMoc Include="sdl_qt_rgb.h">
+    <QtMoc Include="sdl_qt_yuv.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClCompile Include="sdl_qt_rgb.cpp">
+    <ClCompile Include="sdl_qt_yuv.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

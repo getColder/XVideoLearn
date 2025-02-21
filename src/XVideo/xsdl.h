@@ -15,9 +15,24 @@ public:
 	void Close() override;
 	bool Draw(unsigned char* data, int linesize = 0) override;
 	bool IsExit() override;
+	void SetRenderNormal() { rMode_ = RenderMode::Normal; }
+	void SetRenderCopy() { rMode_ = RenderMode::Copy; }
+	void SetRenderMirror() { rMode_ = RenderMode::Mirror; }
+	enum class RenderMode
+	{
+		Normal = 0,
+		Copy,
+		Mirror
+	};
+
+private:
+	bool RenderNormal(int w, int h);
+	bool RenderCopy(int w, int h);
+	bool RenderMirror(int w, int h);
 private:
 	SDL_Window* win_ = nullptr;
 	SDL_Renderer* render_ = nullptr;
 	SDL_Texture* texture_ = nullptr;
+	RenderMode rMode_ = RenderMode::Normal;
 };
 
