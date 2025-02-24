@@ -1,16 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LocalDebuggerWorkingDirectory>..\..\bin\x86</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>..\..\bin\x86\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
-  <PropertyGroup>
-    <ShowAllFiles>true</ShowAllFiles>
-  </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <QtLastBackgroundBuild>2025-02-22T03:22:25.0966916Z</QtLastBackgroundBuild>
+    <QtLastBackgroundBuild>2025-02-24T12:24:13.8456307Z</QtLastBackgroundBuild>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <QtLastBackgroundBuild>2025-02-22T03:22:25.1395483Z</QtLastBackgroundBuild>
+    <QtLastBackgroundBuild>2025-02-24T12:24:13.9318517Z</QtLastBackgroundBuild>
   </PropertyGroup>
 </Project>

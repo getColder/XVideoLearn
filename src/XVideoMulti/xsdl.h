@@ -1,0 +1,43 @@
+/*///////////////////////////////
+*** ‰÷»æSDL µœ÷¿‡ ***
+///////////////////////////////*/
+
+#pragma once
+#include "XVideoView.h"
+struct SDL_Window;
+struct SDL_Renderer;
+struct SDL_Texture;
+
+class XSDL : public XVideoView
+{
+public:
+	bool Init(int w, int h, Format fmt = RGBA) override;
+	void Close() override;
+	bool Draw(const unsigned char* data, int linesize = 0) override;
+	bool Draw(
+		const unsigned char* y, int y_pitch,
+		const unsigned char* u, int u_pitch,
+		const unsigned char* v, int v_pitch
+	) override;
+	bool IsExit() override;
+	void SetRenderNormal() { rMode_ = RenderMode::Normal; }
+	void SetRenderCopy() { rMode_ = RenderMode::Copy; }
+	void SetRenderMirror() { rMode_ = RenderMode::Mirror; }
+	enum class RenderMode
+	{
+		Normal = 0,
+		Copy,
+		Mirror
+	};
+
+private:
+	bool RenderNormal(int w, int h);
+	bool RenderCopy(int w, int h);
+	bool RenderMirror(int w, int h);
+private:
+	SDL_Window* win_ = nullptr;
+	SDL_Renderer* render_ = nullptr;
+	SDL_Texture* texture_ = nullptr;
+	RenderMode rMode_ = RenderMode::Normal;
+};
+
