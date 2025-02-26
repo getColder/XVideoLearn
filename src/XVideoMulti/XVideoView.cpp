@@ -54,6 +54,8 @@ bool XVideoView::DrawFrame(AVFrame* frame)
 		return Draw(frame->data[0], frame->linesize[0]);
 	case AV_PIX_FMT_ARGB:
 		return Draw(frame->data[0], frame->linesize[0]);
+	case AV_PIX_FMT_RGB24:
+		return Draw(frame->data[0], frame->linesize[0]);
 	default:
 		break;
 	}
@@ -97,6 +99,9 @@ AVFrame* XVideoView::Read(bool isMirror/* = false */)
 			frame_->linesize[0] = width_;		//Y
 			frame_->linesize[1] = width_ / 2;	//U
 			frame_->linesize[2] = width_ / 2;	//V
+		}else if (fmt_ == XVideoView::RGB)
+		{
+			frame_->linesize[0] = width_ * 3;
 		}
 		auto re = av_frame_get_buffer(frame_, 0);
 		if (re != 0)
@@ -136,34 +141,18 @@ AVFrame* XVideoView::Read(bool isMirror/* = false */)
 				std::reverse(frame_->data[2] + row, frame_->data[2] + width_ / 2 + row);
 			}
 		}
-	}
-	else
+	}else
 	{
 		ifs_.read((char*)frame_->data[0], frame_->linesize[0] * height_);
 		//镜像
 		if (isMirror)
 		{
 			int lsz = frame_->linesize[0];
+			int pixe_size = fmt_ == XVideoView::RGB ? 3 : 4;
 			for (int i = 0; i < height_; ++i)
 			{
 				int row = lsz * i;
-				for (int j = 0; j < frame_->linesize[0] / 2; j += 4)
-				{
-					int temp0 = frame_->data[0][j + row];
-					int temp1 = frame_->data[0][j + 1 + row];
-					int temp2 = frame_->data[0][j + 2 + row];
-					int temp3 = frame_->data[0][j + 3 + row];
-
-					frame_->data[0][j + row] = frame_->data[0][lsz - j - 4 + row];
-					frame_->data[0][j + 1 + row] = frame_->data[0][lsz - j - 3 + row];
-					frame_->data[0][j + 2 + row] = frame_->data[0][lsz - j - 2 + row];
-					frame_->data[0][j + 3 + row] = frame_->data[0][lsz - j - 1 + row];
-
-					frame_->data[0][lsz - j - 4 + row] = temp0;
-					frame_->data[0][lsz - j - 3 + row] = temp1;
-					frame_->data[0][lsz - j - 2 + row] = temp2;
-					frame_->data[0][lsz - j - 1 + row] = temp3;
-				}
+				MirrorRGB((unsigned char*)frame_->data[0] + row, lsz, pixe_size);
 			}
 		}
 	}
@@ -188,4 +177,18 @@ void MSleep(unsigned int ms)
 long long NowMs()
 {
 	return clock() / (CLOCKS_PER_SEC / 1000);
+}
+
+//RGB类字节数组镜像
+void MirrorRGB(unsigned char * data, int lineSize, int pixel_size)
+{
+	for (int j = 0; j < lineSize / 2; j += pixel_size)
+	{
+		for (int i = 0; i < pixel_size; ++i)
+		{
+			int temp = data[j + i];
+			data[j + i] = data[lineSize - j - (pixel_size - i)];
+			data[lineSize - j - (pixel_size - i)] = temp;
+		}
+	}
 }

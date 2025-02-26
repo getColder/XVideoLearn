@@ -203,6 +203,11 @@
             <string>BGRA</string>
            </property>
           </item>
+          <item>
+           <property name="text">
+            <string>RGB</string>
+           </property>
+          </item>
          </widget>
         </item>
         <item>
@@ -487,6 +492,11 @@
           <item>
            <property name="text">
             <string>BGRA</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>RGB</string>
            </property>
           </item>
          </widget>

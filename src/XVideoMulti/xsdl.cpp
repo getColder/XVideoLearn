@@ -64,6 +64,9 @@ bool XSDL::Init(int w, int h, Format fmt/* = RGBA */)
 	case XVideoView::YUV420P:
 		sdl_fmt = SDL_PIXELFORMAT_IYUV;
 		break;
+	case XVideoView::RGB:
+		sdl_fmt = SDL_PIXELFORMAT_RGB24;
+		break;
 	default:
 		break;
 	}
@@ -119,6 +122,9 @@ bool XSDL::Draw(const unsigned char* data, int linesize/* = 0 */)
 			break;
 		case XVideoView::YUV420P:
 			linesize = width_;
+			break;
+		case XVideoView::RGB:
+			linesize = width_ * 3;
 			break;
 		default:
 			break;

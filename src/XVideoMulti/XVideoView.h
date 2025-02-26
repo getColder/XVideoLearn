@@ -12,8 +12,9 @@
 #include <mutex>
 #include <fstream>
 
-void MSleep(unsigned int ms);
 long long NowMs();
+void MSleep(unsigned int ms);
+void MirrorRGB(unsigned char* data, int lineSize, int pixel_size);
 
 struct AVFrame;
 class XVideoView
@@ -23,6 +24,7 @@ public:
 	{
 		//µÈ¼ÛÓÚffmpeg
 		YUV420P = 0,
+		RGB = 2,
 		ARGB = 25,
 		RGBA = 26,
 		BGRA = 28,

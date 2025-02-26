@@ -97,7 +97,7 @@ SDL_QT_YUV::SDL_QT_YUV(QWidget *parent)
                 ui.radioButton_3->setEnabled(true);
             }
             //调整布局expanding
-            Resize();
+            //Resize();
             qDebug() << ui.widget_videos->size();
         });
     connect(this, SIGNAL(ViewS()), this, SLOT(View()));
@@ -159,37 +159,6 @@ SDL_QT_YUV::~SDL_QT_YUV()
     th_.join();
 }
 
-AVFrame* VideoDataMirror()
-{
-    //Mirror Frame
-    //yyyyuvuv -> YYYYUVUVUV
-    //for (int j = 0; j < sdl_height; ++j)
-    //{
-    //    int row = j * sdl_width;
-    //    for (int i = 0; i < sdl_width / 2; ++i)
-    //    {
-    //        unsigned char temp = frame->data[0][i + row];
-    //        frame->data[0][i + row] = frame->data[0][sdl_width - i - 1 + row];
-    //        frame->data[0][sdl_width - i - 1 + row] = temp;
-    //    }
-    //}
-    //int uv_line_size = sdl_width / 2;
-    //for (int j = 0; j < sdl_height / 2; ++j)
-    //{
-    //    int row = j * uv_line_size;
-    //    for (int i = 0; i < uv_line_size / 2; ++i)
-    //    {
-    //        unsigned char temp1 = frame->data[1][i + row];
-    //        frame->data[1][i + row] = frame->data[1][uv_line_size - i - 1 + row];
-    //        frame->data[1][uv_line_size - i - 1 + row] = temp1;
-    //        unsigned char temp2 = frame->data[2][i + row];
-    //        frame->data[2][i + row] = frame->data[2][uv_line_size - i - 1 + row];
-    //        frame->data[2][uv_line_size - i - 1 + row] = temp2;
-    //    }
-    //}
-    //return frame;
-    return nullptr;
-}
 
 void SDL_QT_YUV::timerEvent(QTimerEvent* ev)
 {
@@ -274,7 +243,7 @@ void SDL_QT_YUV::Open(int i)
     if (filename.isEmpty()) return;
     qDebug() << filename << endl;
     //view 打开文件
-    if (!views[i]->Open(filename.toStdString()))
+    if (!views[i]->Open(filename.toLocal8Bit().toStdString()))
     {
         return;
     }
@@ -306,6 +275,9 @@ void SDL_QT_YUV::Open(int i)
     }
     else if (sFmt == "RGBA") {
         fmt = XVideoView::RGBA;
+    }
+    else if (sFmt == "RGB") {
+        fmt = XVideoView::RGB;
     }
     views[i]->Init(w, h, fmt);
 }
