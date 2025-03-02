@@ -23,3 +23,8 @@ XVideoMulti
 * 增加XVideo多路复用界面
 * XVideoView封装Open、Read接口读取YUV、RGB格式文件的读取
 * 维护AVFrame对象成员存储读取数据
+
+XEncode
+* 轻度封装编解码器
+* 保证线程安全
+* 保证运行后不丢帧

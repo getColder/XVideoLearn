@@ -1,5 +1,6 @@
 #pragma once
 #include <mutex>
+#include <vector>
 struct AVCodecContext;
 struct AVPacket;
 struct AVFrame;
@@ -38,10 +39,13 @@ public:
 	/////////////////////////////////////////////
 	AVPacket* Encode(const AVFrame* frame);
 	/////////////////////////////////////////////
-	/// 创建一个AVFrame， 线程安全
+	// 创建一个AVFrame， 线程安全
 	/// @return 失败范围nullptr 返回AVPacket要手动清理
 	/////////////////////////////////////////////
 	AVFrame* CreateFrame();
+
+	//返回所有编码缓冲中的AVPacket
+	std::vector<AVPacket*> End();
 private:
 	AVCodecContext* ctx_ = nullptr;	//编码器上下文
 	std::mutex mtx_;

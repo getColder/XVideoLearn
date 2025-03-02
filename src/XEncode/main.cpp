@@ -50,6 +50,7 @@ int main(int argc, char* argv[])
 
 	//创建AVFrame空间
 	auto frame = en.CreateFrame();
+	int count = 0;	//写入文件帧数：注意，sps pps idr属于同一帧
 	if (!frame)
 	{
 		return -4;
@@ -81,14 +82,25 @@ int main(int argc, char* argv[])
 		auto pkt = en.Encode(frame);
 		if (pkt)
 		{
+			++count;
 			ofs.write((char*)pkt->data, pkt->size);
 			av_packet_free(&pkt);
 		}
 	}
 
+	//获取剩余缓冲区
+	auto pkts = en.End();
+	for (auto pkt : pkts)
+	{
+		++count;
+		ofs.write((char*)pkt->data, pkt->size);
+		av_packet_free(&pkt);
+	}
+
 	//释放上下文
-	avcodec_free_context(&ctx);
 	av_frame_free(&frame);
 	ofs.close();
+	en.setContext(nullptr);
+	cout << "encode: " << count << endl;
 	return 0;
 }

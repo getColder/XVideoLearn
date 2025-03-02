@@ -147,3 +147,24 @@ AVFrame* XEncode::CreateFrame()
 	}
 	return frame;
 }
+
+std::vector<AVPacket*> XEncode::End()
+{
+	std::vector<AVPacket*> res;
+	unique_lock<mutex> lock(mtx_);
+	if (!ctx_) return res;
+	auto re = avcodec_send_frame(ctx_, NULL);
+	if (re != 0) return res;
+	while (re >= 0)
+	{
+		auto pkt = av_packet_alloc();
+		re = avcodec_receive_packet(ctx_, pkt);
+		if (re != 0)
+		{
+			av_packet_free(&pkt);
+			break;
+		}
+		res.push_back(pkt);
+	}
+	return res;
+}
