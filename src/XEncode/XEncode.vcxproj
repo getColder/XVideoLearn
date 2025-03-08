@@ -24,7 +24,7 @@
     <ProjectGuid>{15dcd585-d0d4-4222-a64e-17eff184bb40}</ProjectGuid>
     <RootNamespace>firstffmpeg</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>XEncode</ProjectName>
+    <ProjectName>XCodec</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -142,10 +142,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="test.h" />
+    <ClInclude Include="xcodec.h" />
+    <ClInclude Include="xdecode.h" />
     <ClInclude Include="xencode.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="xcodec.cpp" />
+    <ClCompile Include="xdecode.cpp" />
     <ClCompile Include="xencode.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
